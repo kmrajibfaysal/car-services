@@ -22,7 +22,7 @@ const Login = () => {
   return (
     <div className="container w-50 mx-auto mt-4" style={{ maxWidth: '600px' }}>
       <h2 className="text-primary text-center display-5 fw-normal">
-        Please Login
+        Welcome back!
       </h2>
       <Form>
         <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -33,9 +33,6 @@ const Login = () => {
             placeholder="Enter email"
             required
           />
-          <Form.Text className="text-muted">
-            We'll never share your email with anyone else.
-          </Form.Text>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -47,16 +44,13 @@ const Login = () => {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="I agree to terms & conditions" />
-        </Form.Group>
         <Button
           onClick={handleSubmit}
           className=""
           variant="primary"
           type="submit"
         >
-          Submit
+          Login
         </Button>
       </Form>
       <p className="mt-3 text-center">
