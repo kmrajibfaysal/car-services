@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
+  const userNameRef = useRef('');
   const emailRef = useRef('');
   const passwordRef = useRef('');
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Register = () => {
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Username</Form.Label>
           <Form.Control
-            ref={emailRef}
+            ref={userNameRef}
             type="text"
             placeholder="Enter username"
             required
