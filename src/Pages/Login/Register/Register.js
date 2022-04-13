@@ -1,16 +1,28 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
+import auth from '../../../firebase.init';
 
 const Register = () => {
   const userNameRef = useRef('');
   const emailRef = useRef('');
   const passwordRef = useRef('');
   const navigate = useNavigate();
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
 
-  const handleRegister = (event) => {
+  const handleRegister = async (event) => {
     event.preventDefault();
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
+    await createUserWithEmailAndPassword(email, password);
   };
+
+  if (user) {
+    navigate('/home');
+  }
 
   const navigateLogin = () => {
     navigate('/login');

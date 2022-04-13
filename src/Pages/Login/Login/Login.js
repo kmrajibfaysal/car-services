@@ -1,19 +1,31 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useLocation, useNavigate } from 'react-router-dom';
+import auth from '../../../firebase.init';
 
 const Login = () => {
   const emailRef = useRef('');
   const passwordRef = useRef('');
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleSubmit = (event) => {
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth);
+
+  const from = location.state?.from.pathname || '/';
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
-    console.log(email);
     const password = passwordRef.current.value;
-    console.log(password);
+    await signInWithEmailAndPassword(email, password);
   };
+
+  if (user) {
+    navigate(from, { replace: true });
+  }
 
   const navigateRegister = () => {
     navigate('/register');
