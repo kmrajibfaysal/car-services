@@ -1,7 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import {
+  useSendPasswordResetEmail,
+  useSignInWithEmailAndPassword,
+} from 'react-firebase-hooks/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
 import SocialLogin from '../SocialLogin/SocialLogin';
@@ -15,7 +18,17 @@ const Login = () => {
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
 
+  const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+
   const from = location.state?.from.pathname || '/';
+
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,6 +43,15 @@ const Login = () => {
 
   const navigateRegister = () => {
     navigate('/register');
+  };
+
+  const handleForgetPassword = async () => {
+    if (!validateEmail(emailRef.current.value)) {
+      alert('Please enter a valid email.');
+      return;
+    }
+    await sendPasswordResetEmail(emailRef.current.value);
+    alert('Sent email to reset password!');
   };
 
   return (
@@ -63,6 +85,7 @@ const Login = () => {
         >
           Login
         </Button>
+        {sending ? <p>Sending reset email!</p> : ''}
       </Form>
       <SocialLogin></SocialLogin>
       <p className="mt-3 text-center">
@@ -73,6 +96,15 @@ const Login = () => {
           onClick={navigateRegister}
         >
           Please Register!
+        </span>
+      </p>
+      <p className="mt-3 text-center">
+        <span
+          className="text-primary ms-2"
+          style={{ cursor: 'pointer' }}
+          onClick={handleForgetPassword}
+        >
+          Forget Password?
         </span>
       </p>
     </div>
