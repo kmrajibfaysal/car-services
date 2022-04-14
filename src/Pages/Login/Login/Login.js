@@ -4,6 +4,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Login = () => {
   const emailRef = useRef('');
@@ -33,12 +34,11 @@ const Login = () => {
 
   return (
     <div className="container w-50 mx-auto mt-4" style={{ maxWidth: '600px' }}>
-      <h2 className="text-primary text-center display-5 fw-normal">
-        Welcome back!
+      <h2 className="text-primary text-center fw-normal">
+        Welcome back! Login
       </h2>
-      <Form>
+      <Form className="my-4">
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
           <Form.Control
             ref={emailRef}
             type="email"
@@ -48,7 +48,6 @@ const Login = () => {
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
           <Form.Control
             ref={passwordRef}
             type="password"
@@ -65,6 +64,7 @@ const Login = () => {
           Login
         </Button>
       </Form>
+      <SocialLogin></SocialLogin>
       <p className="mt-3 text-center">
         New to Genius Car?
         <span
