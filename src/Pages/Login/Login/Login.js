@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useRef } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import {
   useSendPasswordResetEmail,
   useSignInWithEmailAndPassword,
 } from 'react-firebase-hooks/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import auth from '../../../firebase.init';
 import Loading from '../../Shared/Loading/Loading';
 import SocialLogin from '../SocialLogin/SocialLogin';
@@ -36,7 +38,7 @@ const Login = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
     await signInWithEmailAndPassword(email, password);
@@ -52,11 +54,11 @@ const Login = () => {
 
   const handleForgetPassword = async () => {
     if (!validateEmail(emailRef.current.value)) {
-      alert('Please enter a valid email.');
+      toast('Please enter a valid email.');
       return;
     }
     await sendPasswordResetEmail(emailRef.current.value);
-    alert('Sent email to reset password!');
+    toast('Sent email to reset password!');
   };
 
   return (
@@ -82,14 +84,14 @@ const Login = () => {
             required
           />
         </Form.Group>
-        <Button
+        <input
           onClick={handleSubmit}
-          className=""
+          className="btn btn-primary"
           variant="primary"
+          value="Login"
           type="submit"
-        >
-          Login
-        </Button>
+        />
+
         {sending ? <p>Sending reset email!</p> : ''}
       </Form>
       <SocialLogin></SocialLogin>
@@ -111,6 +113,17 @@ const Login = () => {
         >
           Forget Password?
         </span>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </p>
     </div>
   );
