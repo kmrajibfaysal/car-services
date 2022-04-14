@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
@@ -11,6 +11,9 @@ const Register = () => {
   const emailRef = useRef('');
   const passwordRef = useRef('');
   const navigate = useNavigate();
+
+  const [agree, setAgree] = useState(false);
+
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
 
@@ -18,7 +21,9 @@ const Register = () => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    await createUserWithEmailAndPassword(email, password);
+    if (agree) {
+      await createUserWithEmailAndPassword(email, password);
+    }
   };
 
   if (user) {
@@ -28,6 +33,7 @@ const Register = () => {
   const navigateLogin = () => {
     navigate('/login');
   };
+
   return (
     <div className="container w-50 mx-auto mt-4" style={{ maxWidth: '600px' }}>
       <h2 className="text-primary text-center display-5 fw-normal">
@@ -64,13 +70,20 @@ const Register = () => {
           />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check type="checkbox" label="I agree to terms & conditions" />
+          <Form.Check
+            className={agree ? 'text-primary' : 'text-danger'}
+            required
+            onClick={() => setAgree(!agree)}
+            type="checkbox"
+            label="I agree to terms & conditions"
+          />
         </Form.Group>
         <Button
           onClick={handleRegister}
           className=""
           variant="primary"
           type="submit"
+          disabled={!agree}
         >
           Register
         </Button>
