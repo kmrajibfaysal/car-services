@@ -7,12 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
 import facebook from '../../../images/Social/facebook1.png';
 import google from '../../../images/Social/google-icon.png';
+import Loading from '../../Shared/Loading/Loading';
 const SocialLogin = () => {
   const navigate = useNavigate();
-
-  let [signInWithGoogle, user1, loading1, error1] = useSignInWithGoogle(auth);
-
+  const [signInWithGoogle, user1, loading1, error1] = useSignInWithGoogle(auth);
   const [signInWithGithub, user2, loading2, error2] = useSignInWithGithub(auth);
+
+  if (loading1 || loading2) {
+    return <Loading></Loading>;
+  }
 
   const handleGoogleSignIn = async () => {
     await signInWithGoogle();

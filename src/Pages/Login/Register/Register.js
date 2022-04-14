@@ -1,9 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import {
+  useCreateUserWithEmailAndPassword,
+  useUpdateProfile,
+} from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
+import Loading from '../../Shared/Loading/Loading';
 import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Register = () => {
@@ -15,19 +19,28 @@ const Register = () => {
   const [agree, setAgree] = useState(false);
 
   const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
+    useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
+
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
   const handleRegister = async (event) => {
     event.preventDefault();
+    const userName = userNameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    if (agree) {
-      await createUserWithEmailAndPassword(email, password);
-    }
+
+    await createUserWithEmailAndPassword(email, password);
+    await updateProfile({ displayName: userName });
+    console.log('updated profile');
+    navigate('/home');
   };
 
+  if (updating || loading) {
+    return <Loading></Loading>
+  }
+
   if (user) {
-    navigate('/home');
+    console.log('User', user);
   }
 
   const navigateLogin = () => {
